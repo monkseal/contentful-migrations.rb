@@ -1,4 +1,3 @@
-puts "loaded Migrator"
 module ContentfulMigrations
   class Migrator
     include Utils
