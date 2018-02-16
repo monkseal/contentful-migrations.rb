@@ -18,6 +18,7 @@ gem 'contentful-migrations'
 
 ## Usage
 
+
 ### Examples
 Some examples can be found in the ```spec/db/contentful_migrations/``` directory of this project [extended example script](https://github.com/contentful/cma_import_script).
 
