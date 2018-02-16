@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Contentful Migrations in Ruby'
   spec.description   = 'Migration library system for Contentful API dependent on
-                          contentful-management gem and plagarized from activerecod.'
+                          contentful-management gem and plagarized from activerecord.'
   spec.homepage      = "http://kenglish.co"
   spec.license       = 'MIT'
 
