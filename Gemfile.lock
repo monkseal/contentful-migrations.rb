@@ -28,7 +28,7 @@ GEM
     json (1.8.6)
     multi_json (1.13.1)
     public_suffix (3.0.2)
-    rake (10.5.0)
+    rake (12.3.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -52,8 +52,8 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.16)
   contentful-migrations!
-  rake (~> 10.0)
-  rspec (~> 3.0)
+  rake (~> 12.3.0)
+  rspec (~> 3.6)
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
