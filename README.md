@@ -18,11 +18,25 @@ gem 'contentful-migrations'
 
 ## Usage
 
-
 ### Examples
 Some examples can be found in the ```spec/db/contentful_migrations/``` directory of this project [extended example script](https://github.com/contentful/cma_import_script).
 
-### Using the generator
+### Using the Rails generator
+
+If you are using [Ruby on Rails ](http://api.rubyonrails.org/), you can generate new migrations using a rails generator as follows:
+```
+rails g contentful_migration [migration_desc]
+```
+Where `[migration_desc]` is the an underscored description of the migration you'd like to create.
+
+For example:
+```
+rails g contentful_migration new_content_model
+```
+
+This will generate a file `db/contentful_migrations/xxxxxx_new_content_model.rb` where `xxxx` is the timestamp for the file generated.
+
+
 
 ### Running migrations
 
