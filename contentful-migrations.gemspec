@@ -1,11 +1,11 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'contentful/migrations/version'
+require 'contentful_migrations/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'contentful-migrations'
-  spec.version       = Contentful::Migrations::VERSION
+  spec.version       = ContentfulMigrations::VERSION
   spec.authors       = ['Kevin English']
   spec.email         = ['me@kenglish.co']
 
@@ -30,6 +30,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+
+  spec.add_dependency 'contentful-management', '~> 1.10.1'
 
   spec.add_development_dependency 'bundler', '~> 1.16'
   spec.add_development_dependency 'rake', '~> 10.0'
