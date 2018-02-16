@@ -9,6 +9,7 @@ GEM
   specs:
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    byebug (10.0.0)
     contentful-management (1.10.1)
       http (> 1.0, < 3.0)
       json (~> 1.8)
@@ -51,6 +52,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
+  byebug (~> 10.0.0)
   contentful-migrations!
   rake (~> 12.3.0)
   rspec (~> 3.6)
