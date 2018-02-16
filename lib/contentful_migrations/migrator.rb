@@ -8,10 +8,11 @@ module ContentfulMigrations
     end
 
     DEFAULT_MIGRATION_CONTENT_TYPE = "migrations".freeze
+    DEFAULT_MIGRATION_PATH = "db/contentful_migrations"
 
     def self.run(args = {})
       options = {
-        migrations_path: "db/contentful_migrations",
+        migrations_path: DEFAULT_MIGRATION_PATH,
         access_token: ENV["CONTENTFUL_MANAGEMENT_ACCESS_TOKEN"],
         space_id: ENV["CONTENTFUL_SPACE_ID"],
         migration_content_type_name: DEFAULT_MIGRATION_CONTENT_TYPE,

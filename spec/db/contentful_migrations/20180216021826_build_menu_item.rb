@@ -1,4 +1,4 @@
-class BuildMenuItem < ContentfulMigration::Migration
+class BuildMenuItem < ContentfulMigrations::Migration
   def up
     with_space do |space|
       ### Create the content model

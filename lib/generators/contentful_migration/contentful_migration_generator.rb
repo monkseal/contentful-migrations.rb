@@ -7,7 +7,7 @@ class ContentfulMigrationGenerator < Rails::Generators::NamedBase
     name = "#{file_name}"
     migration_file = "db/contentful_migrations/#{next_migration_number}_#{name.underscore}.rb"
     create_file migration_file, <<-FILE.strip_heredoc
-      class #{name.camelize} < ContentfulMigration::Migration
+      class #{name.camelize} < ContentfulMigrations::Migration
 
         def up
           with_space do |space|

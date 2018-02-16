@@ -1,5 +1,6 @@
 require 'contentful/management'
 require 'forwardable'
+
 module ContentfulMigrations
   # MigrationProxy is used to defer loading of the actual migration classes
   # until they are needed. This implementation is borrowed from activerecord's
@@ -36,5 +37,6 @@ module ContentfulMigrations
 end
 require 'contentful_migrations/version'
 require 'contentful_migrations/utils'
+require 'contentful_migrations/migration'
 require 'contentful_migrations/migrator'
 load 'tasks/contentful_migrations.rake'
