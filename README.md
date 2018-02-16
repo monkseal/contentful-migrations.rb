@@ -9,6 +9,10 @@ Ruby library for Rails-style migrations using the [Contentful Content Management
 
 NOTE: This is a 3rd party library and is not maintained by Contentful.
 
+## About Contentful's contentful-management Gem
+
+The [Contentful Content Management](https://github.com/contentful/contentful-management.rb) gem is a Ruby client for the Contentful Content Management API and a dependency of this project. _This library provides a mimimal DSL for migrations only_. Any migrations you write must make use of `contentful-management.rb`. Before using this library, make sure you are familiar with contentful and are able to use their library, see [contentful-management.rb Usage]( https://github.com/contentful/contentful-management.rb#usage)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -19,11 +23,11 @@ gem 'contentful-migrations'
 ## Usage
 
 ### Examples
-Some examples can be found in the ```spec/db/contentful_migrations/``` directory of this project [extended example script](https://github.com/contentful/cma_import_script).
+Some example migrations can be found in the [```spec/db/contentful_migrations/```](https://github.com/monkseal/contentful-migrations.rb/tree/master/spec/db/contentful_migrations) directory of this project.
 
 ### Using the Rails generator
 
-If you are using [Ruby on Rails ](http://api.rubyonrails.org/), you can generate new migrations using a rails generator as follows:
+If you are using [Ruby on Rails ](http://api.rubyonrails.org/), you can generate new contentful migrations using a rails generator as follows:
 ```
 rails g contentful_migration [migration_desc]
 ```
@@ -35,8 +39,6 @@ rails g contentful_migration new_content_model
 ```
 
 This will generate a file `db/contentful_migrations/xxxxxx_new_content_model.rb` where `xxxx` is the timestamp for the file generated.
-
-
 
 ### Running migrations
 
