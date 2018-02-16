@@ -1,0 +1,8 @@
+Description:
+    Create a contentful migration
+
+Example:
+    rails generate contentful_migrations my_data
+
+    This will create:
+        db/contentful_migrations/xxxxx_my_data.rb
