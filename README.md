@@ -54,6 +54,16 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/monkseal/contentful-migrations.rb.
 
+### Author
+
+**Kevin English**
+
+* [github/monkseal](https://github.com/monkseal): Follow me on GitHub for project updates
+* [kenglish.co](http://kenglish.co): Visit my website
+* [kenglish.co/blog](http://kenglish.co/blog): Follow my blog
+
+If you'd like to get in touch regarding a speaking engagement or consulting opportunity, please use the email address on my GitHub profile. Thanks!
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
