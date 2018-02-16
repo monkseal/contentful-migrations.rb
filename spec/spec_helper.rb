@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "contentful/migrations"
+require "contentful_migrations"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

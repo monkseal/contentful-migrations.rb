@@ -1,28 +1,31 @@
-# Contentful::Migrations
+# Contentful Migrations
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/contentful/migrations`. To experiment with that code, run `bin/console` for an interactive prompt.
 
-TODO: Delete this and the text above, and describe your gem
+Ruby library for Rails-style migrations using the [Contentful Content Management API](https://github.com/contentful/contentful-management.rb).
+
+## About Contentful
+
+[Contentful](https://www.contentful.com) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
+
+NOTE: This is a 3rd party library and is not maintained by Contentful.
 
 ## Installation
 
 Add this line to your application's Gemfile:
-
 ```ruby
 gem 'contentful-migrations'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install contentful-migrations
-
 ## Usage
 
-TODO: Write usage instructions here
+### Examples
+Some examples can be found in the ```spec/db/contentful_migrations/``` directory of this project [extended example script](https://github.com/contentful/cma_import_script).
+
+### Using the generator
+
+### Running migrations
+
+### Rolling back migrations
 
 ## Development
 
