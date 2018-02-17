@@ -9,10 +9,10 @@ module ContentfulMigrations
       @contentful_space = nil
     end
 
-    def migrate(client, space)
+    def migrate(direction, client, space)
       @contentful_client = client
       @contentful_space = space
-      up
+      send(direction)
     end
 
     def with_space
@@ -28,6 +28,12 @@ module ContentfulMigrations
       entry.save
       entry.publish
       entry
+    end
+
+    def erase_migration(migration_content_type)
+      entry = migration_content_type.entries.all.find { |m| m.version.to_i == version.to_i }
+      entry.unpublish
+      entry.destroy
     end
   end
 end

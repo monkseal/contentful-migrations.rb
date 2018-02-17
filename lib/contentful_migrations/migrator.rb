@@ -7,18 +7,19 @@ module ContentfulMigrations
       end
     end
 
-    DEFAULT_MIGRATION_CONTENT_TYPE = "migrations".freeze
-    DEFAULT_MIGRATION_PATH = "db/contentful_migrations"
+    DEFAULT_MIGRATION_CONTENT_TYPE = 'migrations'.freeze
+    DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'.freeze
 
-    def self.run(args = {})
-      options = {
-        migrations_path: DEFAULT_MIGRATION_PATH,
-        access_token: ENV["CONTENTFUL_MANAGEMENT_ACCESS_TOKEN"],
-        space_id: ENV["CONTENTFUL_SPACE_ID"],
-        migration_content_type_name: DEFAULT_MIGRATION_CONTENT_TYPE,
-        logger: Logger.new(STDOUT)
-      }.merge(args)
-      new(options).start
+    def self.migrate(args = {})
+      new(parse_options(args)).migrate
+    end
+
+    def self.rollback(args = {})
+      new(parse_options(args)).rollback
+    end
+
+    def self.pending(args = {})
+      new(parse_options(args)).pending
     end
 
     attr_reader :migrations_path, :access_token, :space_id, :client, :space,
@@ -39,21 +40,41 @@ module ContentfulMigrations
       validate_options
     end
 
-    def start
+    def migrate
       runnable = migrations(migrations_path).reject { |m| ran?(m) }
       if runnable.empty?
-        logger.info("No migrations to run, everything up to date!")
+        logger.info('No migrations to run, everything up to date!')
       end
+
       runnable.each do |migration|
-        logger.info("running migration #{migration.version}")
-        migration.migrate(client, space)
+        logger.info("running migration #{migration.version} #{migration.name} ")
+        migration.migrate(:up, client, space)
         migration.record_migration(migration_content_type)
       end
     end
 
-  private
+    def rollback
+      already_migrated = migrations(migrations_path).select { |m| ran?(m) }
+      migration = already_migrated.pop
+      logger.info("Rolling back migration #{migration.version} #{migration.name} ")
+      migration.migrate(:down, client, space)
+      migration.erase_migration(migration_content_type)
+    end
+
+    private
+
+    def self.parse_options(args)
+      {
+        migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
+        access_token: ENV['CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'],
+        space_id: ENV['CONTENTFUL_SPACE_ID'],
+        migration_content_type_name: DEFAULT_MIGRATION_CONTENT_TYPE,
+        logger: Logger.new(STDOUT)
+      }.merge(args)
+    end
+
     def validate_options
-      fail InvalidMigrationPath.new(migrations_path) unless File.directory?(migrations_path)
+      raise InvalidMigrationPath, migrations_path unless File.directory?(migrations_path)
     end
 
     def ran?(migration)
@@ -99,9 +120,9 @@ module ContentfulMigrations
       content_type = space.content_types.create(
         name: migration_content_type_name,
         id: migration_content_type_name,
-        description: "Migration Table for interal use only, do not delete"
+        description: 'Migration Table for interal use only, do not delete'
       )
-      content_type.fields.create(id: "version", name: "version", type: "Integer")
+      content_type.fields.create(id: 'version', name: 'version', type: 'Integer')
       content_type.save
       content_type.publish
       content_type

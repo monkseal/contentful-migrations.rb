@@ -8,7 +8,8 @@ module ContentfulMigrations
 
   MigrationProxy = Struct.new(:name, :version, :filename, :scope) do
     extend Forwardable
-    include ContentfulMigrations::Utils
+    include Utils
+
     def initialize(name, version, filename, scope)
       super
       @migration = nil
@@ -22,7 +23,7 @@ module ContentfulMigrations
       File.mtime filename
     end
 
-    delegate %i[migrate record_migration] => :migration
+    delegate %i[migrate record_migration erase_migration] => :migration
 
     private
 
@@ -36,7 +37,3 @@ module ContentfulMigrations
      end
   end
 end
-require 'contentful_migrations/version'
-require 'contentful_migrations/migration'
-require 'contentful_migrations/migrator'
-load 'tasks/contentful_migrations.rake'
