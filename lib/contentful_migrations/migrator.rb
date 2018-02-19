@@ -63,6 +63,14 @@ module ContentfulMigrations
       migration.erase_migration(migration_content_type)
     end
 
+    def pending
+      runnable = migrations(migrations_path).reject { |m| ran?(m) }
+
+      runnable.each do |migration|
+        logger.info("Pending #{migration.version} #{migration.name} ")
+      end
+    end
+
     private
 
     def self.parse_options(args)
