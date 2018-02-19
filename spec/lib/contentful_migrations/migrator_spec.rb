@@ -1,4 +1,8 @@
 RSpec.describe ContentfulMigrations::Migrator do
+  ########
+  ## Class methods
+  ########
+
   describe '.migrate' do
     let(:migrated) { double(:migrated) }
 
@@ -35,26 +39,77 @@ RSpec.describe ContentfulMigrations::Migrator do
     end
   end
 
+  ########
+  ## Instance methods
+  ########
+
+  let(:logger) { double(:logger) }
+  let(:defaults) do
+    { migrations_path: 'spec/db/contentful_migrations',
+      access_token: 'access_token',
+      space_id: 'space_id',
+      migration_content_type_name: ContentfulMigrations::Migrator::DEFAULT_MIGRATION_CONTENT_TYPE,
+      logger: logger }
+  end
+
   describe '#initialize' do
-    let(:options) do
-      { migrations_path: 'spec/db/contentful_migrations',
-        access_token: 'access_token',
-        space_id: 'space_id',
-        migration_content_type_name: 'x_migrations',
-        logger: double(:logger) }
-    end
     it 'sets name and version' do
-      migrator = described_class.new(options)
+      migrator = described_class.new(defaults)
 
       expect(migrator.migrations_path).to eq('spec/db/contentful_migrations')
       expect(migrator.access_token).to eq('access_token')
       expect(migrator.space_id).to eq('space_id')
-      expect(migrator.migration_content_type_name).to eq('x_migrations')
+      expect(migrator.migration_content_type_name).to eq('migrations')
     end
     it 'raises error when invalid path' do
-      expect {
-        described_class.new(options.merge(migrations_path: "bad/path"))
-      }.to raise_error(ContentfulMigrations::Migrator::InvalidMigrationPath)
+      expect do
+        described_class.new(defaults.merge(migrations_path: 'bad/path'))
+      end.to raise_error(ContentfulMigrations::Migrator::InvalidMigrationPath)
+    end
+  end
+  describe '#migrate' do
+    subject { described_class.new(defaults) }
+    context 'when no migrations' do
+      before do
+        allow(subject).to receive(:migrations).and_return([])
+        expect(logger).to receive(:info)
+      end
+
+      it 'sets name and version' do
+        expect(subject.migrate).to eq(subject)
+      end
+    end
+
+    context 'when migrations' do
+      let(:client) { double(:client) }
+      let(:spaces) { double(:spaces) }
+      let(:space) { double(:space) }
+      let(:content_types) { double(:content_types) }
+      let(:migration_content_type) { double(:migration_content_type) }
+      let(:entries) { double(:entries, all: all) }
+      let(:all) { [] }
+      let(:migration) { double(:migration, version: 20_180_216_021_826, name: 'BuildTestContent') }
+      before do
+        expect(Contentful::Management::Client).to receive(:new).and_return(client)
+        expect(client).to receive(:spaces).and_return(spaces)
+        expect(spaces).to receive(:find).with('space_id').and_return(space)
+        expect(space).to receive(:content_types).and_return(content_types)
+        expect(content_types).to receive(:find).with('migrations').and_return(migration_content_type)
+        expect(migration_content_type).to receive(:entries).and_return(entries)
+        expect(ContentfulMigrations::MigrationProxy).to receive(:new).with(
+          'BuildTestContent',
+          20_180_216_021_826,
+          'spec/db/contentful_migrations/20180216021826_build_test_content.rb',
+          ''
+        ).and_return(migration)
+        expect(migration).to receive(:migrate).with(:up, client, space)
+        expect(migration).to receive(:record_migration).with(migration_content_type)
+        allow(logger).to receive(:info)
+      end
+
+      it 'sets name and version' do
+        expect(subject.migrate).to eq(subject)
+      end
     end
   end
 end

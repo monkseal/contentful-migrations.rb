@@ -52,6 +52,7 @@ module ContentfulMigrations
         migration.migrate(:up, client, space)
         migration.record_migration(migration_content_type)
       end
+      self
     end
 
     def rollback
