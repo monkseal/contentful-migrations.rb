@@ -1,5 +1,7 @@
 module ContentfulMigrations
   module Utils
+    # This method was taken from ActiveSupport::Inflector to avoid having
+    # a dependency on ActiveSupport in this project.
     # http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-constantize
     def camelize(term, uppercase_first_letter = true)
       string = term.to_s
