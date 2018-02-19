@@ -70,7 +70,7 @@ module ContentfulMigrations
       end
     end
 
-    private
+  private
 
     def self.parse_options(args)
       {

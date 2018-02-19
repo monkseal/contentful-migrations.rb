@@ -19,7 +19,7 @@ module ContentfulMigrations
       @migration_content_type ||= find_or_create_migration_content_type
     end
 
-    private
+  private
 
     def find_or_create_migration_content_type
       content_type = space.content_types.find(migration_content_type_name)
