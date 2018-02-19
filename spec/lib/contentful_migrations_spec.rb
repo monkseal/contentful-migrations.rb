@@ -1,6 +1,6 @@
-RSpec.describe Contentful::Migrations do
+RSpec.describe ContentfulMigrations do
   it "has a version number" do
-    expect(Contentful::Migrations::VERSION).not_to be nil
+    expect(ContentfulMigrations::VERSION).not_to be nil
   end
 
   it "does something useful" do

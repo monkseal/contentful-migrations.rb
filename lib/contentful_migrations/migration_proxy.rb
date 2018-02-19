@@ -19,17 +19,13 @@ module ContentfulMigrations
       File.basename(filename)
     end
 
-    def mtime
-      File.mtime filename
-    end
-
     delegate %i[migrate record_migration erase_migration] => :migration
 
     private
 
     def migration
       @migration ||= load_migration
-     end
+    end
 
     def load_migration
       require(File.expand_path(filename))
