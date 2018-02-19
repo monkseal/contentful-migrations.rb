@@ -19,6 +19,11 @@ Add this line to your application's Gemfile:
 gem 'contentful-migrations'
 ```
 
+## How it works
+
+*Contentful Migrations* creates a new content model in your contentful space called `migrations`. This model is queried each time you run the migration to determine if it has been run before or not. In order for the library to work, you should never delete this `migrations`. You might want to change the permissions on the model so it is only visible to users with the `admin` role.
+
+
 ## Usage
 
 ### Examples
