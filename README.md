@@ -1,7 +1,6 @@
 # Contentful Migrations
 
-
-Ruby library for Rails-style migrations using the [Contentful Content Management API](https://github.com/contentful/contentful-management.rb).
+Ruby library for Rails/ActiveRecord style migrations using the [Contentful Content Management API](https://github.com/contentful/contentful-management.rb).
 
 ## About Contentful
 
@@ -11,7 +10,7 @@ NOTE: This is a 3rd party library and is not maintained by Contentful.
 
 ## About Contentful's contentful-management Gem
 
-The [Contentful Content Management](https://github.com/contentful/contentful-management.rb) gem is a Ruby client for the Contentful Content Management API and a dependency of this project. _This library provides a mimimal DSL for migrations only_. Any migrations you write must make use of `contentful-management.rb`. Before using this library, make sure you are familiar with contentful and are able to use their library, see [contentful-management.rb Usage]( https://github.com/contentful/contentful-management.rb#usage)
+The [Contentful Content Management](https://github.com/contentful/contentful-management.rb) gem is a Ruby client for the Contentful Content Management API and a dependency of this project. _This library provides a mimimal DSL for migrations only_. Any migrations you write must make use of the ruby api provided by `contentful-management.rb`. Before using this library, make sure you are familiar with contentful and are able to use their library, see [contentful-management.rb Usage]( https://github.com/contentful/contentful-management.rb#usage)
 
 ## Installation
 
@@ -40,9 +39,104 @@ rails g contentful_migration new_content_model
 
 This will generate a file `db/contentful_migrations/xxxxxx_new_content_model.rb` where `xxxx` is the timestamp for the file generated.
 
+### Configuration
+
+At this time, this gem does not provide a configuration block, object or initializer. You must configure it using the following environment variables:
+
+```
+CONTENTFUL_MANAGEMENT_ACCESS_TOKEN # Contentful Access token to you management API
+CONTENTFUL_SPACE_ID # Cotentful SpaceID value
+MIGRATION_PATH # [Optional] migration path, defaults to db/contentful_migrations
+```
+An easy way to deal with this is to use  [foreman](https://github.com/ddollar/foreman). You can create local `.env` in the root folder of your project, for example:
+```
+CONTENTFUL_MANAGEMENT_ACCESS_TOKEN="my_management_token"
+CONTENTFUL_SPACE_ID="my_space_id"
+```
+
+Then run the below tasks with `foreman run`:
+```
+foreman run rake contentful_migrations:rollback
+```
+
 ### Running migrations
+Once you have created a new migration, you can run it using the following rake task:
+
+```
+rake contentful_migrations:migrate
+```
 
 ### Rolling back migrations
+Migrations can be rolled back _one at a time_ with the following:
+
+```
+rake contentful_migrations:rollback
+```
+
+### Pending migrations
+
+You can view pending migrations:
+
+```
+rake  contentful_migrations:pending
+```
+
+## Migration API
+Currently supported are two method to directly access objects from the contentful-management api:
+
+### `with_space`
+
+Provides a block with the [space](https://github.com/contentful/contentful-management.rb#spaces) for your migration. Here is an example of how you would use this to create a simple up/down migration:
+
+```
+class BuildTestContent < ContentfulMigrations::Migration
+  def up
+    with_space do |space|
+      ### Create the content model
+      content_type = space.content_types.create(
+        name: 'Test Content',
+        id: 'testContent',
+        description: 'A Test Content Type'
+      )
+      ### Create the content fields
+      content_type.fields.create(id: 'name', name: 'name', type: 'Symbol', required: true)
+      content_type.fields.create(id: 'content', name: 'content', type: 'Text')
+      content_type.save
+      content_type.publish
+    end
+  end
+
+  def down
+    with_space do |space|
+      content_type = space.content_types.find('testContent')
+      content_type.unpublish
+      content_type.destroy
+    end
+  end
+end
+```
+### `with_editor_interfaces`
+
+This provides access to the [editor interface](https://github.com/contentful/contentful-management.rb#editor-interface) object. It is best used embedded inside a `with_space` block as follows:
+
+```
+class BuildTestContent < ContentfulMigrations::Migration
+  def up
+    with_space do |space|
+      # Set the editor interface for *name* field to *radio
+      with_editor_interfaces do |editor_interfaces|
+        editor_interface = editor_interfaces.default(space.id, content_type.id)
+        controls = editor_interface.controls.map do |control|
+          control["widgetId"] = "radio" if control["fieldId"] == "name"
+          control
+        end
+        editor_interface.update(controls: controls)
+        editor_interface.reload
+      end
+    end
+  end
+end
+```
 
 ## Development
 
