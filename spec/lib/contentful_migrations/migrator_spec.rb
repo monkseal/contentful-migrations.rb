@@ -34,4 +34,27 @@ RSpec.describe ContentfulMigrations::Migrator do
       expect(described_class.pending).to eq(pending_result)
     end
   end
+
+  describe '#initialize' do
+    let(:options) do
+      { migrations_path: 'spec/db/contentful_migrations',
+        access_token: 'access_token',
+        space_id: 'space_id',
+        migration_content_type_name: 'x_migrations',
+        logger: double(:logger) }
+    end
+    it 'sets name and version' do
+      migrator = described_class.new(options)
+
+      expect(migrator.migrations_path).to eq('spec/db/contentful_migrations')
+      expect(migrator.access_token).to eq('access_token')
+      expect(migrator.space_id).to eq('space_id')
+      expect(migrator.migration_content_type_name).to eq('x_migrations')
+    end
+    it 'raises error when invalid path' do
+      expect {
+        described_class.new(options.merge(migrations_path: "bad/path"))
+      }.to raise_error(ContentfulMigrations::Migrator::InvalidMigrationPath)
+    end
+  end
 end

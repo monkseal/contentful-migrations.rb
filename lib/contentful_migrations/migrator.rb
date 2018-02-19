@@ -1,6 +1,7 @@
 module ContentfulMigrations
   class Migrator
     include Utils
+
     class InvalidMigrationPath < StandardError #:nodoc:
       def initialize(migrations_path)
         super("#{migrations_path} is not a valid directory.")
