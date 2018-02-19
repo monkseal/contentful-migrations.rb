@@ -48,7 +48,7 @@ RSpec.describe ContentfulMigrations::Migrator do
     { migrations_path: 'spec/db/contentful_migrations',
       access_token: 'access_token',
       space_id: 'space_id',
-      migration_content_type_name: ContentfulMigrations::Migrator::DEFAULT_MIGRATION_CONTENT_TYPE,
+      migration_content_type_name: ContentfulMigrations::MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
       logger: logger }
   end
 
