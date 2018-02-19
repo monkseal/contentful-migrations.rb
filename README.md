@@ -130,7 +130,7 @@ class BuildTestContent < ContentfulMigrations::Migration
     with_space do |space|
       # Set the editor interface for *name* field to *radio
       with_editor_interfaces do |editor_interfaces|
-        editor_interface = editor_interfaces.default(space.id, content_type.id)
+        editor_interface = editor_interfaces.default(space.id, 'testContent')
         controls = editor_interface.controls.map do |control|
           control["widgetId"] = "radio" if control["fieldId"] == "name"
           control
