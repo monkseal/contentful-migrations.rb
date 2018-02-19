@@ -89,12 +89,15 @@ RSpec.describe ContentfulMigrations::Migrator do
       let(:entries) { double(:entries, all: all) }
       let(:all) { [] }
       let(:migration) { double(:migration, version: 20_180_216_021_826, name: 'BuildTestContent') }
+
       before do
         expect(Contentful::Management::Client).to receive(:new).and_return(client)
         expect(client).to receive(:spaces).and_return(spaces)
         expect(spaces).to receive(:find).with('space_id').and_return(space)
-        expect(space).to receive(:content_types).and_return(content_types)
-        expect(content_types).to receive(:find).with('migrations').and_return(migration_content_type)
+        allow(subject).to receive(:migration_content_type).and_return(migration_content_type)
+      end
+
+      before do
         expect(migration_content_type).to receive(:entries).and_return(entries)
         expect(ContentfulMigrations::MigrationProxy).to receive(:new).with(
           'BuildTestContent',
