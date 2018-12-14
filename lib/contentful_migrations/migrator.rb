@@ -36,7 +36,7 @@ module ContentfulMigrations
       @space_id = space_id
       @migration_content_type_name = migration_content_type_name
       @client = Contentful::Management::Client.new(access_token)
-      @space = @client.spaces.find(space_id)
+      @space = @client.environments(space_id).find(ENV['CONTENTFUL_ENV'] || 'master')
       validate_options
     end
 

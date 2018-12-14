@@ -92,8 +92,8 @@ RSpec.describe ContentfulMigrations::Migrator do
 
       before do
         expect(Contentful::Management::Client).to receive(:new).and_return(client)
-        expect(client).to receive(:spaces).and_return(spaces)
-        expect(spaces).to receive(:find).with('space_id').and_return(space)
+        expect(client).to receive(:environments).with('space_id').and_return(space)
+        expect(space).to receive(:find).with('master').and_return(space)
         allow(subject).to receive(:migration_content_type).and_return(migration_content_type)
       end
 
