@@ -22,21 +22,23 @@ module ContentfulMigrations
       new(parse_options(args)).pending
     end
 
-    attr_reader :migrations_path, :access_token, :space_id, :client, :space,
+    attr_reader :migrations_path, :access_token, :space_id, :client, :space, :env_id,
                 :migration_content_type_name, :logger
 
     def initialize(migrations_path:,
                    access_token:,
                    space_id:,
                    migration_content_type_name:,
-                   logger:)
+                   logger:,
+                   env_id: nil)
       @migrations_path = migrations_path
       @access_token = access_token
       @logger = logger
       @space_id = space_id
       @migration_content_type_name = migration_content_type_name
       @client = Contentful::Management::Client.new(access_token)
-      @space = @client.environments(space_id).find(ENV['CONTENTFUL_ENV'] || 'master')
+      @env_id = env_id || ENV['CONTENTFUL_ENV'] || 'master'
+      @space = @client.environments(space_id).find(@env_id)
       validate_options
     end
 
