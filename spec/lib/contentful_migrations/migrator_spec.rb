@@ -49,7 +49,8 @@ RSpec.describe ContentfulMigrations::Migrator do
       access_token: 'access_token',
       space_id: 'space_id',
       migration_content_type_name: ContentfulMigrations::MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
-      logger: logger }
+      logger: logger,
+      env_id: 'master' }
   end
 
   describe '#initialize' do
@@ -60,6 +61,7 @@ RSpec.describe ContentfulMigrations::Migrator do
       expect(migrator.access_token).to eq('access_token')
       expect(migrator.space_id).to eq('space_id')
       expect(migrator.migration_content_type_name).to eq('migrations')
+      expect(migrator.env_id).to eq('master')
     end
     it 'raises error when invalid path' do
       expect do
@@ -92,8 +94,8 @@ RSpec.describe ContentfulMigrations::Migrator do
 
       before do
         expect(Contentful::Management::Client).to receive(:new).and_return(client)
-        expect(client).to receive(:spaces).and_return(spaces)
-        expect(spaces).to receive(:find).with('space_id').and_return(space)
+        expect(client).to receive(:environments).with('space_id').and_return(space)
+        expect(space).to receive(:find).with('master').and_return(space)
         allow(subject).to receive(:migration_content_type).and_return(migration_content_type)
       end
 
