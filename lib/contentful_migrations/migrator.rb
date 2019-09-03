@@ -97,7 +97,7 @@ module ContentfulMigrations
     end
 
     def load_migrated
-      migration_content_type.entries.all.map { |m| m.version.to_i }
+      migration_content_type.entries.all(limit: 1000).map { |m| m.version.to_i }
     end
 
     def migrations(paths)
