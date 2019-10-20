@@ -97,9 +97,10 @@ RSpec.describe ContentfulMigrations::Migrator do
         expect(client).to receive(:environments).with('space_id').and_return(space)
         expect(space).to receive(:find).with('master').and_return(space)
         allow(subject).to receive(:migration_content_type).and_return(migration_content_type)
+        allow(logger).to receive(:info)
       end
 
-      before do
+      it 'sets name and version' do
         expect(migration_content_type).to receive(:entries).and_return(entries)
         expect(ContentfulMigrations::MigrationProxy).to receive(:new).with(
           'BuildTestContent',
@@ -109,11 +110,24 @@ RSpec.describe ContentfulMigrations::Migrator do
         ).and_return(migration)
         expect(migration).to receive(:migrate).with(:up, client, space)
         expect(migration).to receive(:record_migration).with(migration_content_type)
-        allow(logger).to receive(:info)
+        expect(subject.migrate).to eq(subject)
       end
 
-      it 'sets name and version' do
-        expect(subject.migrate).to eq(subject)
+      it 'sets @page_size during construction' do
+        expect(subject.instance_variable_get('@page_size')).to eq(1000)
+      end
+
+      it 'calls fetch_page when loading migrated records' do
+        allow(subject).to receive(:fetch_page).and_return([])
+        expect(subject).to receive(:fetch_page).once
+        subject.send(:migrated)
+      end
+
+      it 'pages through contentful records' do
+        subject.instance_variable_set('@page_size', 10)
+        allow(subject).to receive(:fetch_page).and_return((1..10).to_a, (1..9).to_a)
+        expect(subject).to receive(:fetch_page).twice
+        subject.send(:load_migrated)
       end
     end
   end

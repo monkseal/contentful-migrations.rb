@@ -23,7 +23,7 @@ module ContentfulMigrations
     end
 
     attr_reader :migrations_path, :access_token, :space_id, :client, :space, :env_id,
-                :migration_content_type_name, :logger
+                :migration_content_type_name, :logger, :page_size
 
     def initialize(migrations_path:,
                    access_token:,
@@ -39,6 +39,7 @@ module ContentfulMigrations
       @client = Contentful::Management::Client.new(access_token)
       @env_id = env_id || ENV['CONTENTFUL_ENV'] || 'master'
       @space = @client.environments(space_id).find(@env_id)
+      @page_size = 1000
       validate_options
     end
 
@@ -97,7 +98,22 @@ module ContentfulMigrations
     end
 
     def load_migrated
-      migration_content_type.entries.all(limit: 1000).map { |m| m.version.to_i }
+      entries = []
+      args = {
+        limit: @page_size,
+        skip: entries.count
+      }
+      page = fetch_page(args)
+      entries.concat(page)
+      if page.size == @page_size
+        load_migrated
+      else
+        entries
+      end
+    end
+
+    def fetch_page(args)
+      migration_content_type.entries.all(args).map { |m| m.version.to_i }
     end
 
     def migrations(paths)
