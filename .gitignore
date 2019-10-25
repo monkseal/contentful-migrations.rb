@@ -12,3 +12,6 @@
 /.env
 /.ruby-version
 .byebug_history
+
+# Builds
+contentful-migrations-*.gem
