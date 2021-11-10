@@ -7,7 +7,7 @@ module ContentfulMiagrations
     end
 
     generators do
-      require_relative "../generators/contentful_migration_generator"
+      require_relative '../generators/contentful_migration/contentful_migration_generator'
     end
   end
 end
