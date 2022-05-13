@@ -36,7 +36,9 @@ module ContentfulMigrations
       @logger = logger
       @space_id = space_id
       @migration_content_type_name = migration_content_type_name
-      @client = Contentful::Management::Client.new(access_token)
+      @client = Contentful::Management::Client.new(access_token, {
+        raise_errors: true,
+      })
       @env_id = env_id || ENV['CONTENTFUL_ENV'] || 'master'
       @space = @client.environments(space_id).find(@env_id)
       @page_size = 1000
